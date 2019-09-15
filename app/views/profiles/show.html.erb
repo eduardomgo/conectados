@@ -6,6 +6,11 @@
 </p>
 
 <p>
+  <strong>Image:</strong>
+  <%= image_tag @user.avatar  if @user.avatar.attached? %>
+</p>
+
+<p>
   <strong>Email:</strong>
   <%= @user.email %>
 </p>
