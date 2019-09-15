@@ -2,6 +2,12 @@
 <html>
   <head>
     <title>Conectados</title>
+    <% if notice %>
+      <p class="alert alert-success"><%= notice %></p>
+    <% end %>
+    <% if alert %>
+      <p class="alert alert-danger"><%= alert %></p>
+    <% end %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
