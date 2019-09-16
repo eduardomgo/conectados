@@ -1,0 +1,18 @@
+
+<strong>Amigos de <%= @user.name %>:</strong> <br/>
+<% @friends.each do |f| %>
+  <%= f[0] %> 
+  <% if current_user.id == @user.id %><%= link_to "Desfazer Amizade", destroy_friendship_path(f[1]), method: :delete%> <% end %>
+<% end %>
+<br/>
+<% if @user.id == current_user.id %>
+<strong>Pedidos de amizade:</strong> <br/>
+    <% @friend_asks.each do |f| %>
+        <%= f.replyer.name %> <%= link_to "Aceitar", accept_friendship_path(f.replyer_id), method: :post %>
+    <% end %>
+<br/>
+<% end %>
+
+<br/>
+<%= link_to "Voltar", profile_path(@user.id)%>
+<br/><br/><br/>
