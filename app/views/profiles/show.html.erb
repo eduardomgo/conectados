@@ -15,6 +15,20 @@
   <%= @user.email %>
 </p>
 <% if @user.id == current_user.id%>
-  <%= link_to 'Edit', edit_user_registration_path(@user) %> |
+  <%= link_to 'Edit', edit_user_registration_path(@user) %> 
+<% else %>
+  <% if @is_friend == 0 %>
+    <%= link_to "Adicionar amigo", add_path(@user.id), method: :post%>
+  <% end  %>
 <% end %>
+
+<strong>Amigos:</strong> <br/>
+<% @friends.each do |f| %>
+  <%= f.replyer.name %>
+<% end %>
+
+<br/><br/><br/>
+
+
+
 <%= link_to 'Back', profiles_path %>

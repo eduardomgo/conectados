@@ -1,6 +1,6 @@
 class ProfilesController < ApplicationController
-    before_action :set_user, only: [:show, :destroy]
-    before_action :block_not_adm, only: [:destroy, :index]
+    before_action :set_user, only: [:show, :destroy, :add_friend]
+    before_action :block_not_adm, only: :destroy
 
     def block_not_adm
         if user_signed_in?
@@ -10,16 +10,30 @@ class ProfilesController < ApplicationController
         end
     end
 
+    def add_friend
+        if Friend.where(asker_id: current_user.id, replyer_id: @user.id).count() == 0
+            Friend.create(asker_id: current_user.id, replyer_id: @user.id)
+            Friend.create(asker_id: @user.id, replyer_id: current_user.id)
+        end
+    end
+
     def destroy
         @user.destroy
         redirect_to profiles_path
     end
 
     def index
-        @users = User.all
+        @users = if params[:term]
+            User.where("name LIKE (?)",
+            "%#{params[:term]}%").paginate(page: params[:page], per_page: 10)
+        else
+          User.paginate(page: params[:page], per_page: 6)
+        end
     end
 
     def show
+        @friends = Friend.where(asker_id: @user.id)
+        @is_friend = Friend.where(asker_id: current_user.id, replyer_id: @user.id).count()
     end
 
     private

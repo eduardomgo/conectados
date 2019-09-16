@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+<% if user_signed_in? %>
+  Voce está conectado como <%= current_user.name %>, <%= link_to "desconectar", destroy_user_session_path, method: :delete  %>
+<% end %>
   <head>
     <title>Conectados</title>
     <% if notice %>
