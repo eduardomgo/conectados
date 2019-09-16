@@ -54,7 +54,7 @@ class ProfilesController < ApplicationController
         @users = if params[:term]
             User.where("name LIKE (?)", "%#{params[:term]}%").paginate(page: params[:page], per_page: 10)
         else
-          User.paginate(page: params[:page], per_page: )
+          User.paginate(page: params[:page], per_page: 10)
         end
     end
 
