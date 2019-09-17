@@ -1,10 +1,6 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Users</h1>
-<%= form_tag(profiles_path, method: :get) do %>  
-  <%= text_field_tag :term, params[:term], :placeholder => "Procure por nomes..",:class => "busca-input" %>
-  <%= submit_tag 'Encontrar', name: nil,:class => "busca-submit" %>
-<% end %>
 <table>
   <thead>
     <tr>

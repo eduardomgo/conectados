@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Posts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Content</th>
+      <th colspan="5"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @posts.each do |post| %>
+      <tr>
+        <td> <%= post.user.name %> </td>
+        <td><%= post.content %></td>
+        <td><%= link_to 'Show', post %></td>
+        <% if post.image.attached? %>
+          <td><%= image_tag post.image %></td>
+        <% end %>
+        <% if current_user.id == post.user_id %>
+          <td><%= link_to 'Edit', edit_post_path(post) %></td>
+        <% end %>
+        <% if current_user.id == post.user_id or current_user.adm == true%>
+          <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= will_paginate @posts %>
+
+<br>
+

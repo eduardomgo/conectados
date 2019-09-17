@@ -1,7 +1,7 @@
 
 <strong>Amigos de <%= @user.name %>:</strong> <br/>
 <% @friends.each do |f| %>
-  <%= f[0] %> 
+  <%= link_to User.find(f[1]).name, profile_path(f[1]) %> <br/>
   <% if current_user.id == @user.id %><%= link_to "Desfazer Amizade", destroy_friendship_path(f[1]), method: :delete%> <% end %>
 <% end %>
 <br/>

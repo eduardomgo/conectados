@@ -20,9 +20,29 @@
 <% else %>
   <% if @is_friend == 0 %>
     <%= link_to "Adicionar amigo", add_path(@user.id), method: :post%>
-  <% end  %>
+  <% else %>
+    <%= link_to "Cancelar solicitação", cancel_friendship_path, method: :delete %>
+  <% end %>
 <% end %>
+<br/>
+<% if @posts.count != 0 %>
 
+<% @posts.each do |p| %>
+  <br/>
+  -----------------------------<br/>
+  <strong>Criado em: </strong> <%= p.created_at %>
+  <br/>
+  <strong>Conteúdo: </strong> <%= p.content %>
+  <% if p.image.attached? %>
+    <strong>Image:</strong>
+    <%= image_tag p.image %>
+  <% end %>
+  <%= link_to "Visualizar", post_path(p.id) %>
+  <br/>
+  -----------------------------
 
+<% end %>
+<% end %>
+<br/>
 
 <%= link_to 'Back', profiles_path %>

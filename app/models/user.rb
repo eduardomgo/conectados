@@ -1,8 +1,30 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and 
+
   has_one_attached :avatar
 
+  # Dependências
+  has_many :likes, dependent: :destroy
+  has_many :posts, dependent: :destroy
+  has_many :comments, dependent: :destroy
+
+  # Validações
+  validate :image_size
+  validates :name, presence: true, length: {in: 2..25}
+  validates :password, length: {in: 3..50, presence: true}
+
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+  validates :email, presence: true, length: {in: 3..50}, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
+
+  def image_size
+    if avatar.attached? and avatar.blob.byte_size > 1000000
+      avatar.purge
+      errors.add(:icon,  "Imagem muito grande")
+    end
+  end
+  
+  # Devise
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, 
          :omniauthable, omniauth_providers: %i[facebook]

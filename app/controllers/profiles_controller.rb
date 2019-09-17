@@ -1,6 +1,7 @@
 class ProfilesController < ApplicationController
-    before_action :set_user, only: [:destroy_friendship, :accept_friendship, :friends, :show, :destroy, :add_friend]
+    before_action :set_user, only: [:cancel_friendship, :destroy_friendship, :accept_friendship, :friends, :show, :destroy, :add_friend]
     before_action :block_not_adm, only: :destroy
+    before_action :block_non_logged
 
     def block_not_adm
         if user_signed_in?
@@ -15,6 +16,14 @@ class ProfilesController < ApplicationController
         puts @user.id, current_user.id
         @friend.accepted = true
         @friend.save
+        redirect_to friends_path(current_user.id)
+    end
+    
+    def cancel_friendship
+        @friend = Friend.find_by(asker_id: @user.id, replyer_id: current_user.id)
+        @friend2 = Friend.find_by(asker_id: current_user.id, replyer_id: @user.id)
+        @friend.destroy
+        @friend2.destroy
         redirect_to profile_path(@user.id)
     end
 
@@ -40,6 +49,7 @@ class ProfilesController < ApplicationController
     end
 
     def show
+        @posts = Post.where(user_id: @user.id)
         @friends = Friend.where(asker_id: @user.id)
         @is_friend = Friend.where(asker_id: current_user.id, replyer_id: @user.id).count()
     end
@@ -57,34 +67,8 @@ class ProfilesController < ApplicationController
           User.paginate(page: params[:page], per_page: 10)
         end
     end
-
-    def show
-        @is_friend = Friend.where(asker_id: current_user.id, replyer_id: @user.id).count()
-    end
-
+    
     private
-    def friendships(u1)
-        friend_asks = Friend.where(asker_id: u1.id, accepted: false)
-        f1 = Friend.where(asker_id: u1.id, accepted: true)
-        friends1 = []
-        f1.each do |f|
-            friends1.push([f.replyer.name, f.replyer_id])
-        end
-
-        f2 = Friend.where(replyer: u1.id, accepted: true)
-        friends2 = []
-        f2.each do |f|
-            friends2.push(f.asker.name)
-        end
-
-        @friends = []
-        friends1.each do |f|
-            if f[0].in?(friends2)
-                @friends.push(f)
-            end
-        end
-        return @friends
-    end
     # Use callbacks to share common setup or constraints between actions.
     def set_user
         @user = User.find(params[:id])

@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  Postagem de: <%= link_to @post.user.name, profile_path(@post.user.id)%><br/>
+  <strong>Content:</strong>
+  <%= @post.content %><br/>
+  
+  <% if @post.image.attached? %>
+    <strong>Image:</strong>
+    <%= image_tag @post.image %><br/>
+  <% end %>
+  Contagem de likes:
+  <%= @likes %> <br/> <% if @like %>
+    <%= link_to "Deslike", like_path(@post.id), method: :patch%>
+  <% else %>
+    <%= link_to "Like", like_path(@post.id), method: :patch%>
+  <% end %>
+
+</p>
+<% @comments.each do |c|%>
+  <strong><%= link_to c.user.name, profile_path(c.user.id) %></strong> <%= c.content %>
+  <% if current_user.id == c.user_id%>
+    <%= link_to "Apagar comentário", delete_comment_path(@post.id, c.id), method: :delete%> 
+  <% end %> <br/> 
+<% end %>
+<%= form_for( @comment, url: comment_path, method: :post) do |form| %>
+        <%= form.text_field :content %>
+      <%= form.submit "Comentar"%>
+<% end %>
+<% if current_user.id == @post.user_id%>
+  <%= link_to 'Edit', edit_post_path(@post) %> |
+<% end %>
+<%= link_to 'Back', posts_path %>
