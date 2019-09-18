@@ -23,6 +23,7 @@
     <%= link_to "Apagar comentário", delete_comment_path(@post.id, c.id), method: :delete%> 
   <% end %> <br/> 
 <% end %>
+<%= will_paginate @comments %>
 <%= form_for( @comment, url: comment_path, method: :post) do |form| %>
         <%= form.text_field :content %>
       <%= form.submit "Comentar"%>

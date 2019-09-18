@@ -15,7 +15,7 @@ class PostsController < ApplicationController
       @ids.push(t[1])
     end
     puts @ids
-    @posts = Post.where(user_id: @ids).order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+    @posts = Post.where(user_id: @ids).order(created_at: :desc).paginate(page: params[:page], per_page: 9)
   end
 
   def like
@@ -51,7 +51,7 @@ class PostsController < ApplicationController
   def show
     @like = Like.find_by(user_id: current_user.id, post_id: @post.id)
     @likes = Like.where(post_id: @post.id).count()
-    @comments = Comment.where(post_id: @post.id)
+    @comments = Comment.where(post_id: @post.id).paginate(page: params[:page], per_page: 6)
     @comment = Comment.new
   end
 
